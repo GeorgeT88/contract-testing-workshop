@@ -24,13 +24,12 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
 @ExtendWith(PactConsumerTestExt.class)
-@PactTestFor
 class StudentProviderTest {
 
   @Pact(consumer = "student-consumer", provider = "student-provider")
   public V4Pact getStudentWithId1(PactDslWithProvider builder) {
-    return builder.given("Student 1 exists")
-                  .uponReceiving("get existing student with ID")
+    return builder.given("student 1 exists")
+                  .uponReceiving("get existing student with ID 1")
                   .path("/students/1")
                   .method("GET")
                   .willRespondWith()
@@ -47,7 +46,7 @@ class StudentProviderTest {
 
   @Pact(consumer = "student-consumer", provider = "student-provider")
   public V4Pact getAllStudents(PactDslWithProvider builder) {
-    return builder.given("Students exist")
+    return builder.given("students exist")
                   .uponReceiving("get all students")
                   .path("/students/")
                   .method("GET")
@@ -67,7 +66,7 @@ class StudentProviderTest {
 
   @Pact(consumer = "student-consumer", provider = "student-provider")
   public V4Pact getAllStudentsEmptyResponse(PactDslWithProvider builder) {
-    return builder.given("No students exist")
+    return builder.given("no students exist")
                   .uponReceiving("get all students when no student exists")
                   .path("/students/")
                   .method("GET")

@@ -47,17 +47,17 @@ class StudentConsumerTest {
     context.setTarget(testTarget);
   }
 
-  @State("Student 1 exists")
+  @State("student 1 exists")
   public void student1Exists() {
     when(studentRepository.findById("1")).thenReturn(Optional.of(createFakeStudent("1")));
   }
 
-  @State("Students exist")
+  @State("students exist")
   public void studentsExist() {
     when(studentRepository.findAll()).thenReturn(List.of(createFakeStudent("1"), createFakeStudent("2")));
   }
 
-  @State("No students exist")
+  @State("no students exist")
   public void noStudentExist() {
     when(studentRepository.findAll()).thenReturn(Collections.emptyList());
   }
