@@ -13,9 +13,9 @@ import au.com.dius.pact.provider.junitsupport.State;
 import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
 import au.com.dius.pact.provider.spring.junit5.MockMvcTestTarget;
 import com.github.javafaker.Faker;
-import com.sngular.pactflow.provider.contracts.controller.StudentController;
-import com.sngular.pactflow.provider.contracts.model.Student;
-import com.sngular.pactflow.provider.contracts.repository.StudentRepository;
+import com.sngular.pactflow.provider.controller.StudentController;
+import com.sngular.pactflow.provider.model.Student;
+import com.sngular.pactflow.provider.repository.StudentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @PactBroker
 @Provider("student-provider")
 @ExtendWith(MockitoExtension.class)
-class StudentConsumerTest {
+class StudentProviderVerificationTest {
 
   @InjectMocks
   private StudentController studentController;

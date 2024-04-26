@@ -1,4 +1,4 @@
-package com.sngular.pactflow.provider.contracts.exceptions;
+package com.sngular.pactflow.provider.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

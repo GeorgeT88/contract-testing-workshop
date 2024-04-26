@@ -1,12 +1,12 @@
-package com.sngular.pactflow.provider.contracts.controller;
+package com.sngular.pactflow.provider.controller;
 
 import java.net.URI;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-import com.sngular.pactflow.provider.contracts.exceptions.StudentNotFoundException;
-import com.sngular.pactflow.provider.contracts.model.Student;
-import com.sngular.pactflow.provider.contracts.repository.StudentRepository;
+import com.sngular.pactflow.provider.exceptions.StudentNotFoundException;
+import com.sngular.pactflow.provider.model.Student;
+import com.sngular.pactflow.provider.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
