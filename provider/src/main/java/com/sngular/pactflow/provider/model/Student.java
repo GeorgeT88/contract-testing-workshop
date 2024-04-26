@@ -1,4 +1,4 @@
-package com.sngular.pactflow.provider.contracts.model;
+package com.sngular.pactflow.provider.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

@@ -1,6 +1,6 @@
-package com.sngular.pactflow.provider.contracts.repository;
+package com.sngular.pactflow.provider.repository;
 
-import com.sngular.pactflow.provider.contracts.model.Student;
+import com.sngular.pactflow.provider.model.Student;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

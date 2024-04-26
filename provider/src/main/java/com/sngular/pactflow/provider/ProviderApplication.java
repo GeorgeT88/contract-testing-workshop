@@ -1,4 +1,4 @@
-package com.sngular.pactflow.provider.contracts;
+package com.sngular.pactflow.provider;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
