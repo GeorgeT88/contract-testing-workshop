@@ -15,13 +15,13 @@ variables:
 
   # Manual execution parameters
   PIPELINE:
-    description: "The pipeline to be executed."
+    description: "The component pipeline to be executed."
     value: "consumer"
     options:
       - "consumer"
       - "provider"
   ENVIRONMENT:
-    description: "Environment where the component will be published."
+    description: "Environment where the component will be published. Select 'NONE' for a build without deployment."
     value: "NONE"
     options:
       - "NONE"
