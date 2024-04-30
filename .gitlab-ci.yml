@@ -1,6 +1,7 @@
 image: maven:3-openjdk-17
 
 variables:
+  # Pipeline image configuration
   MAVEN_CLI_OPTS: >
     --batch-mode
     --errors
@@ -12,6 +13,13 @@ variables:
   PACT_BROKER_TOKEN: $PACTFLOW_TOKEN
   PIPELINE_NAME: '[$ENVIRONMENT] - $PIPELINE pipeline'
 
+  # Manual execution parameters
+  PIPELINE:
+    description: "The pipeline to be executed. Values: 'consumer', 'provider'"
+  ENVIRONMENT:
+    description: "Environment where the component will be published. Values: 'NONE', 'DEV', 'PRE', 'PROD'"
+    value: "NONE"
+
 workflow:
   name: '$PIPELINE_NAME'
   rules:
@@ -19,7 +27,7 @@ workflow:
     when: never
   - if: '$PIPELINE != "consumer" && $PIPELINE != "provider" && $PIPELINE != "verification"'
     when: never
-  - if: '$PIPELINE != "verification" && $ENVIRONMENT != "DEV" && $ENVIRONMENT != "PRE" && $ENVIRONMENT != "PROD"'
+  - if: '$PIPELINE != "verification" && $ENVIRONMENT != "DEV" && $ENVIRONMENT != "PRE" && $ENVIRONMENT != "PROD" && $ENVIRONMENT != "NONE"'
     when: never
   - if: '$PIPELINE == "verification" && ( $PROVIDER_VERSION == null || $PROVIDER_BRANCH == null || $CONSUMER_BRANCH == null)'
     when: never
@@ -101,6 +109,8 @@ can_i_deploy:
   rules:
   - if: '$PIPELINE == "verification"'
     when: never
+  - if: '$ENVIRONMENT == "NONE"'
+    when: never
   - when: on_success
   needs:
   - job: pact_cli
@@ -118,6 +128,8 @@ deploy:
   rules:
   - if: '$PIPELINE == "verification"'
     when: never
+  - if: '$ENVIRONMENT == "NONE"'
+    when: never
   - when: on_success
   needs:
   - job: pact_cli
@@ -132,6 +144,8 @@ tagging:
     --environment $ENVIRONMENT
   rules:
   - if: '$PIPELINE == "verification"'
+    when: never
+  - if: '$ENVIRONMENT == "NONE"'
     when: never
   - when: on_success
   needs:
