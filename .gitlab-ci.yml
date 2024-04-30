@@ -15,10 +15,19 @@ variables:
 
   # Manual execution parameters
   PIPELINE:
-    description: "The pipeline to be executed. Values: 'consumer', 'provider'"
+    description: "The pipeline to be executed."
+    value: "consumer"
+    options:
+      - "consumer"
+      - "provider"
   ENVIRONMENT:
-    description: "Environment where the component will be published. Values: 'NONE', 'DEV', 'PRE', 'PROD'"
+    description: "Environment where the component will be published."
     value: "NONE"
+    options:
+      - "NONE"
+      - "DEV"
+      - "PRE"
+      - "PROD"
 
 workflow:
   name: '$PIPELINE_NAME'
