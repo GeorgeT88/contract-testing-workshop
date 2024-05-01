@@ -32,138 +32,138 @@ variables:
 workflow:
   name: '$PIPELINE_NAME'
   rules:
-  - if: $CI_PIPELINE_SOURCE == "push"
-    when: never
-  - if: '$PIPELINE != "consumer" && $PIPELINE != "provider" && $PIPELINE != "verification"'
-    when: never
-  - if: '$PIPELINE != "verification" && $ENVIRONMENT != "DEV" && $ENVIRONMENT != "PRE" && $ENVIRONMENT != "PROD" && $ENVIRONMENT != "NONE"'
-    when: never
-  - if: '$PIPELINE == "verification" && ( $PROVIDER_VERSION == null || $PROVIDER_BRANCH == null || $CONSUMER_BRANCH == null)'
-    when: never
-  - when: always
+    - if: $CI_PIPELINE_SOURCE == "push"
+      when: never
+    - if: '$PIPELINE != "consumer" && $PIPELINE != "provider" && $PIPELINE != "verification"'
+      when: never
+    - if: '$PIPELINE != "verification" && $ENVIRONMENT != "DEV" && $ENVIRONMENT != "PRE" && $ENVIRONMENT != "PROD" && $ENVIRONMENT != "NONE"'
+      when: never
+    - if: '$PIPELINE == "verification" && ( $PROVIDER_VERSION == null || $PROVIDER_BRANCH == null || $CONSUMER_BRANCH == null)'
+      when: never
+    - when: always
 
 stages:
-- setup
-- build
-- publication
-- verification
-- deployment
+  - setup
+  - build
+  - publication
+  - verification
+  - deployment
 
 default:
   cache:
     key: pact-cli-cache
     paths:
-    - $CI_PROJECT_DIR/pact/
+      - $CI_PROJECT_DIR/pact/
   before_script:
-  - export PATH="$CI_PROJECT_DIR/pact/bin:$PATH"
+    - export PATH="$CI_PROJECT_DIR/pact/bin:$PATH"
 
 pact_cli:
   stage: setup
   script:
-  - curl -fsSL https://raw.githubusercontent.com/pact-foundation/pact-ruby-standalone/master/install.sh | PACT_CLI_VERSION=v2.4.2 bash
+    - curl -fsSL https://raw.githubusercontent.com/pact-foundation/pact-ruby-standalone/master/install.sh | PACT_CLI_VERSION=v2.4.2 bash
   rules:
-  - if: '$PIPELINE == "verification"'
-    when: never
-  - when: on_success
+    - if: '$PIPELINE == "verification"'
+      when: never
+    - when: on_success
 
 consumer:
   stage: build
   script:
-  - echo PACTICIPANT="student-consumer" >> pacticipant.env
-  - mvn -f consumer/pom.xml $MAVEN_CLI_OPTS clean install
+    - echo PACTICIPANT="student-consumer" >> pacticipant.env
+    - mvn -f consumer/pom.xml $MAVEN_CLI_OPTS clean install
   artifacts:
     paths:
-    - consumer/target/pacts
+      - consumer/target/pacts
     reports:
       dotenv: pacticipant.env
   rules:
-  - if: '$PIPELINE == "consumer"'
+    - if: '$PIPELINE == "consumer"'
 
 provider:
   stage: build
   script:
-  - echo PACTICIPANT="student-provider" >> pacticipant.env
-  - mvn -f provider/pom.xml $MAVEN_CLI_OPTS clean install
-    -Dpactbroker.consumerversionselectors.rawjson='[{"deployed":true}, {"latest":true}]'
-    -Dpact.verifier.publishResults=true
-    -Dpact.provider.version=$CI_COMMIT_SHA
-    -Dpact.provider.branch=$CI_COMMIT_BRANCH
+    - echo PACTICIPANT="student-provider" >> pacticipant.env
+    - mvn -f provider/pom.xml $MAVEN_CLI_OPTS clean install
+      -Dpactbroker.consumerversionselectors.rawjson='[{"deployed":true}, {"latest":true}]'
+      -Dpact.verifier.publishResults=true
+      -Dpact.provider.version=$CI_COMMIT_SHA
+      -Dpact.provider.branch=$CI_COMMIT_BRANCH
   artifacts:
     reports:
       dotenv: pacticipant.env
   rules:
-  - if: '$PIPELINE == "provider"'
+    - if: '$PIPELINE == "provider"'
 
 publish_contract:
   stage: publication
   script:
-  - pact-broker publish consumer/target/pacts --auto-detect-version-properties
+    - pact-broker publish consumer/target/pacts --auto-detect-version-properties
   dependencies:
-  - consumer
+    - consumer
   rules:
-  - if: '$PIPELINE == "consumer"'
+    - if: '$PIPELINE == "consumer"'
   needs:
-  - job: pact_cli
-  - job: consumer
+    - job: pact_cli
+    - job: consumer
 
 can_i_deploy:
   stage: deployment
   script:
-  - pact-broker can-i-deploy
-    --pacticipant $PACTICIPANT
-    --version $CI_COMMIT_SHA
-    --to-environment $ENVIRONMENT
-    --retry-while-unknown=5
-    --retry-interval=15
+    - pact-broker can-i-deploy
+      --pacticipant $PACTICIPANT
+      --version $CI_COMMIT_SHA
+      --to-environment $ENVIRONMENT
+      --retry-while-unknown=5
+      --retry-interval=15
   rules:
-  - if: '$PIPELINE == "verification"'
-    when: never
-  - if: '$ENVIRONMENT == "NONE"'
-    when: never
-  - when: on_success
+    - if: '$PIPELINE == "verification"'
+      when: never
+    - if: '$ENVIRONMENT == "NONE"'
+      when: never
+    - when: on_success
   needs:
-  - job: pact_cli
-  - job: consumer
-    optional: true
-  - job: publish_contract
-    optional: true
-  - job: provider
-    optional: true
+    - job: pact_cli
+    - job: consumer
+      optional: true
+    - job: publish_contract
+      optional: true
+    - job: provider
+      optional: true
 
 deploy:
   stage: deployment
   script:
-  - echo We have deployed $PACTICIPANT to $ENVIRONMENT!!!
+    - echo We have deployed $PACTICIPANT to $ENVIRONMENT!!!
   rules:
-  - if: '$PIPELINE == "verification"'
-    when: never
-  - if: '$ENVIRONMENT == "NONE"'
-    when: never
-  - when: on_success
+    - if: '$PIPELINE == "verification"'
+      when: never
+    - if: '$ENVIRONMENT == "NONE"'
+      when: never
+    - when: on_success
   needs:
-  - job: pact_cli
-  - job: can_i_deploy
+    - job: pact_cli
+    - job: can_i_deploy
 
 tagging:
   stage: deployment
   script:
-  - pact-broker record-deployment
-    --pacticipant $PACTICIPANT
-    --version $CI_COMMIT_SHA
-    --environment $ENVIRONMENT
+    - pact-broker record-deployment
+      --pacticipant $PACTICIPANT
+      --version $CI_COMMIT_SHA
+      --environment $ENVIRONMENT
   rules:
-  - if: '$PIPELINE == "verification"'
-    when: never
-  - if: '$ENVIRONMENT == "NONE"'
-    when: never
-  - when: on_success
+    - if: '$PIPELINE == "verification"'
+      when: never
+    - if: '$ENVIRONMENT == "NONE"'
+      when: never
+    - when: on_success
   needs:
-  - job: pact_cli
-  - job: deploy
-  - job: consumer
-    optional: true
-  - job: provider
-    optional: true
+    - job: pact_cli
+    - job: deploy
+    - job: consumer
+      optional: true
+    - job: provider
+      optional: true
 
 verification:
   stage: verification
@@ -171,12 +171,12 @@ verification:
     GIT_STRATEGY: clone
     GIT_CHECKOUT: "false"
   before_script:
-  - git checkout -B $PROVIDER_BRANCH $PROVIDER_VERSION
+    - git checkout -B $PROVIDER_BRANCH $PROVIDER_VERSION
   script:
-  - mvn -f provider/pom.xml $MAVEN_CLI_OPTS clean install
-    -Dpactbroker.consumerversionselectors.rawjson='[{"branch":"'$CONSUMER_BRANCH'"}]'
-    -Dpact.verifier.publishResults=true
-    -Dpact.provider.version=$PROVIDER_VERSION
-    -Dpact.provider.branch=$PROVIDER_BRANCH
+    - mvn -f provider/pom.xml $MAVEN_CLI_OPTS clean install
+      -Dpactbroker.consumerversionselectors.rawjson='[{"branch":"'$CONSUMER_BRANCH'"}]'
+      -Dpact.verifier.publishResults=true
+      -Dpact.provider.version=$PROVIDER_VERSION
+      -Dpact.provider.branch=$PROVIDER_BRANCH
   rules:
-  - if: '$PIPELINE == "verification"'
+    - if: '$PIPELINE == "verification"'
