@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Student {
 
-  @Id
-  private String id;
+    @Id
+    private String id;
 
-  private String name;
+    private String name;
 
-  private long studentNumber;
+    private long studentNumber;
 
-  private String email;
+    private String email;
 
 }

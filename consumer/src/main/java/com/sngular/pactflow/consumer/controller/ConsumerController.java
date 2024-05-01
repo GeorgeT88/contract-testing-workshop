@@ -13,19 +13,19 @@ import org.springframework.web.client.HttpClientErrorException;
 @Slf4j
 public class ConsumerController {
 
-  private final StudentService studentService;
+    private final StudentService studentService;
 
-  public ConsumerController(StudentService studentService) {
-    this.studentService = studentService;
-  }
-
-  @GetMapping(value = "/test")
-  public Student testIntegration() {
-    try {
-      return studentService.getStudent("1");
-    } catch (HttpClientErrorException ex) {
-      log.error("It's broken --> {}", ex.getMessage());
-      throw ex;
+    public ConsumerController(StudentService studentService) {
+        this.studentService = studentService;
     }
-  }
+
+    @GetMapping(value = "/test")
+    public Student testIntegration() {
+        try {
+            return studentService.getStudent("1");
+        } catch (HttpClientErrorException ex) {
+            log.error("It's broken --> {}", ex.getMessage());
+            throw ex;
+        }
+    }
 }

@@ -9,8 +9,8 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class StudentServiceConfig {
 
-  @Bean
-  RestTemplate studentRestTemplate(@Value("${provider.port:8082}") int port) {
-    return new RestTemplateBuilder().rootUri(String.format("http://localhost:%d", port)).build();
-  }
+    @Bean
+    RestTemplate studentRestTemplate(@Value("${provider.port:8082}") int port) {
+        return new RestTemplateBuilder().rootUri(String.format("http://localhost:%d", port)).build();
+    }
 }
