@@ -6,8 +6,8 @@ import au.com.dius.pact.consumer.junit5.PactConsumerTestExt;
 import au.com.dius.pact.consumer.junit5.PactTestFor;
 import au.com.dius.pact.core.model.V4Pact;
 import au.com.dius.pact.core.model.annotations.Pact;
-import com.sngular.pactflow.consumer.model.Student;
-import com.sngular.pactflow.consumer.service.StudentService;
+import com.sngular.pactflow.consumer.model.Teacher;
+import com.sngular.pactflow.consumer.service.TeacherService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,13 +24,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ExtendWith(PactConsumerTestExt.class)
-class StudentProviderTest {
+class TeacherProviderTest {
 
-    @Pact(consumer = "consumer", provider = "student-provider")
-    public V4Pact getStudentWithId1(PactDslWithProvider builder) {
-        return builder.given("student 1 exists")
+    @Pact(consumer = "consumer", provider = "teacher-provider")
+    public V4Pact getTeacherWithId1(PactDslWithProvider builder) {
+        return builder.given("teacher 1 exists")
                 .uponReceiving("get an existing student with ID 1")
-                .path("/students/1")
+                .path("/teachers/1")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
@@ -39,16 +39,16 @@ class StudentProviderTest {
                     object.stringType("id", "1");
                     object.stringType("name", "Fake name");
                     object.stringType("email", "some.email@sngular.com");
-                    object.numberType("studentNumber", 23);
+                    object.numberType("teacherNumber", 23);
                 }).build())
                 .toPact().asV4Pact().get();
     }
 
-    @Pact(consumer = "consumer", provider = "student-provider")
-    public V4Pact getAllStudents(PactDslWithProvider builder) {
-        return builder.given("students exist")
-                .uponReceiving("get all students")
-                .path("/students/")
+    @Pact(consumer = "consumer", provider = "teacher-provider")
+    public V4Pact getAllTeachers(PactDslWithProvider builder) {
+        return builder.given("teachers exist")
+                .uponReceiving("get all teachers")
+                .path("/teachers/")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
@@ -58,17 +58,17 @@ class StudentProviderTest {
                             object.stringType("id", "2");
                             object.stringType("name", "Another fake name");
                             object.stringType("email", "another.email@sngular.com");
-                            object.numberType("studentNumber", 24);
+                            object.numberType("teacherNumber", 24);
                         })
                 ).build())
                 .toPact().asV4Pact().get();
     }
 
-    @Pact(consumer = "consumer", provider = "student-provider")
-    public V4Pact getAllStudentsEmptyResponse(PactDslWithProvider builder) {
-        return builder.given("no students exist")
-                .uponReceiving("get all students when no student exists")
-                .path("/students/")
+    @Pact(consumer = "consumer", provider = "teacher-provider")
+    public V4Pact getAllTeachersEmptyResponse(PactDslWithProvider builder) {
+        return builder.given("no teachers exist")
+                .uponReceiving("get all teachers when no teacher exists")
+                .path("/teachers/")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
@@ -78,43 +78,43 @@ class StudentProviderTest {
     }
 
     @Test
-    @PactTestFor(pactMethod = "getStudentWithId1")
-    void getStudentWhenStudentExist(MockServer mockServer) {
-        Student expected = Student.builder()
+    @PactTestFor(pactMethod = "getTeacherWithId1")
+    void getTeacherWhenTeacherExist(MockServer mockServer) {
+        Teacher expected = Teacher.builder()
                 .id("1")
                 .name("Fake name")
                 .email("some.email@sngular.com")
-                .studentNumber(23).build();
+                .teacherNumber(23).build();
 
         RestTemplate restTemplate = new RestTemplateBuilder().rootUri(mockServer.getUrl()).build();
-        Student student = new StudentService(restTemplate).getStudent("1");
+        Teacher teacher = new TeacherService(restTemplate).getTeacher("1");
 
-        assertEquals(expected, student);
+        assertEquals(expected, teacher);
     }
 
     @Test
-    @PactTestFor(pactMethod = "getAllStudents")
-    void getStudentsWhenStudentsExist(MockServer mockServer) {
-        Student student = Student.builder()
+    @PactTestFor(pactMethod = "getAllTeachers")
+    void getTeachersWhenTeachersExist(MockServer mockServer) {
+        Teacher teacher = Teacher.builder()
                 .id("2")
                 .name("Another fake name")
                 .email("another.email@sngular.com")
-                .studentNumber(24).build();
+                .teacherNumber(24).build();
 
-        List<Student> expected = List.of(student, student);
+        List<Teacher> expected = List.of(teacher, teacher);
 
         RestTemplate restTemplate = new RestTemplateBuilder().rootUri(mockServer.getUrl()).build();
-        List<Student> students = new StudentService(restTemplate).getStudents();
+        List<Teacher> teachers = new TeacherService(restTemplate).getTeachers();
 
-        assertEquals(expected, students);
+        assertEquals(expected, teachers);
     }
 
     @Test
-    @PactTestFor(pactMethod = "getAllStudentsEmptyResponse")
-    void getStudentsWhenNoStudentsExistTest(MockServer mockServer) {
+    @PactTestFor(pactMethod = "getAllTeachersEmptyResponse")
+    void getTeachersWhenNoTeachersExistTest(MockServer mockServer) {
         RestTemplate restTemplate = new RestTemplateBuilder().rootUri(mockServer.getUrl()).build();
-        List<Student> students = new StudentService(restTemplate).getStudents();
+        List<Teacher> teachers = new TeacherService(restTemplate).getTeachers();
 
-        assertEquals(Collections.emptyList(), students);
+        assertEquals(Collections.emptyList(), teachers);
     }
 }
