@@ -8,30 +8,43 @@ import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
 import au.com.dius.pact.provider.spring.junit5.MockMvcTestTarget;
 import com.github.javafaker.Faker;
 import com.sngular.pactflow.student.controller.StudentController;
+import com.sngular.pactflow.student.exceptions.CustomExceptionHandler;
+import com.sngular.pactflow.student.model.Address;
+import com.sngular.pactflow.student.model.Course;
 import com.sngular.pactflow.student.model.Student;
 import com.sngular.pactflow.student.repository.StudentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
+import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @PactBroker
 @Provider("student-provider")
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest()
 class StudentProviderVerificationTest {
 
-    @InjectMocks
+    public static final String NO_STUDENTS_EXIST = "no students exist";
+    public static final String STUDENT_1_EXISTS = "student with ID 1 exists";
+    public static final String MULTIPLE_STUDENTS_EXISTS = "multiple students exist";
+
+    @Autowired
     private StudentController studentController;
 
-    @Mock
+    @Autowired
+    private CustomExceptionHandler customExceptionHandler;
+
+    @SpyBean
     private StudentRepository studentRepository;
 
     @TestTemplate
@@ -44,30 +57,55 @@ class StudentProviderVerificationTest {
     void setUp(PactVerificationContext context) {
         MockMvcTestTarget testTarget = new MockMvcTestTarget();
         testTarget.setControllers(studentController);
+        testTarget.setControllerAdvices(customExceptionHandler);
         context.setTarget(testTarget);
     }
 
-    @State("student 1 exists")
+    @State(STUDENT_1_EXISTS)
     public void student1Exists() {
-        when(studentRepository.findById("1")).thenReturn(Optional.of(createFakeStudent("1")));
+        Student one = createFakeStudent(1L);
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(one));
+        when(studentRepository.findAll()).thenReturn(List.of(one));
     }
 
-    @State("students exist")
+    @State(MULTIPLE_STUDENTS_EXISTS)
     public void studentsExist() {
-        when(studentRepository.findAll()).thenReturn(List.of(createFakeStudent("1"), createFakeStudent("2")));
+        Student one = createFakeStudent(1L);
+        Student two = createFakeStudent(2L);
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(one));
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(two));
+        when(studentRepository.findAll()).thenReturn(List.of(one, two));
     }
 
-    @State("no students exist")
+    @State(NO_STUDENTS_EXIST)
     public void noStudentExist() {
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.empty());
         when(studentRepository.findAll()).thenReturn(Collections.emptyList());
     }
 
-    private Student createFakeStudent(String s) {
+    private Student createFakeStudent(Long id) {
         Faker faker = new Faker();
+
+        Address address = Address.builder()
+                .street(faker.address().streetAddress())
+                .city(faker.address().city())
+                .zipCode(faker.address().zipCode())
+                .build();
+
+        Course course = Course.builder()
+                .courseName("Intro to " + faker.educator().course())
+                .professor("Dr. " + faker.name().fullName())
+                .credits(faker.number().randomDigit())
+                .build();
+
         return Student.builder()
-                .id(s)
-                .name(faker.name().firstName())
-                .studentNumber(faker.number().randomNumber())
-                .email(faker.internet().emailAddress()).build();
+                .id(id)
+                .name(faker.name().fullName())
+                .birth(faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                .credits(faker.number().randomDigit())
+                .email(faker.internet().emailAddress())
+                .address(address)
+                .enrolledCourses(Arrays.asList(course, course))
+                .build();
     }
 }

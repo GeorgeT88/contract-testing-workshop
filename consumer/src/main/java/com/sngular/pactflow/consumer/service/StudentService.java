@@ -27,7 +27,7 @@ public class StudentService {
         return restTemplate.postForObject(BASE_URI_STUDENTS, student, Student.class);
     }
 
-    public Student getStudent(String id) {
+    public Student getStudent(Long id) {
         return restTemplate.getForObject(BASE_URI_STUDENTS + id, Student.class);
     }
 
@@ -36,13 +36,13 @@ public class StudentService {
         }).getBody();
     }
 
-    public void updateStudent(String id, Student student) {
+    public Student updateStudent(Long id, Student student) {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<Student> entity = new HttpEntity<>(student, headers);
-        restTemplate.exchange(BASE_URI_STUDENTS + id, HttpMethod.PUT, entity, Void.class);
+        return restTemplate.exchange(BASE_URI_STUDENTS + id, HttpMethod.PUT, entity, Student.class).getBody();
     }
 
-    public void deleteStudent(String id) {
+    public void deleteStudent(Long id) {
         restTemplate.delete(BASE_URI_STUDENTS + id);
     }
 }
