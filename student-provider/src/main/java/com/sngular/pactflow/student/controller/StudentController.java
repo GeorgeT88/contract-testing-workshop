@@ -24,7 +24,7 @@ public class StudentController {
         this.studentRepository = studentRepository;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         log.info("Creating student: {}", student);
         Student createdStudent = studentRepository.save(student);
@@ -42,26 +42,28 @@ public class StudentController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Student getStudent(@PathVariable String id) {
+    public Student getStudent(@PathVariable Long id) {
         log.info("Retrieving student by ID: {}", id);
         return getStudentById(id);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Student> updateStudent(@PathVariable String id, @RequestBody Student student) {
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student student) {
         log.info("Updating student: {}", student);
         student.setId(getStudentById(id).getId());
         return ResponseEntity.ok(studentRepository.save(student));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable String id) {
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         log.info("Deleting student by ID: {}", id);
         studentRepository.deleteById(getStudentById(id).getId());
         return ResponseEntity.noContent().build();
     }
 
-    private Student getStudentById(final String id) {
-        return studentRepository.findById(id).orElseThrow(StudentNotFoundException::new);
+    private Student getStudentById(final Long id) {
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new StudentNotFoundException(id));
     }
+
 }
