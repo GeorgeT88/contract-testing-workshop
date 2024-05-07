@@ -1,4 +1,4 @@
-package com.sngular.pactflow.student.model;
+package com.sngular.pactflow.teacher.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.sngular.pactflow.student.exceptions;
+package com.sngular.pactflow.teacher.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,9 +10,9 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class CustomExceptionHandler {
 
-    @ExceptionHandler(StudentNotFoundException.class)
-    public ResponseEntity<Object> handleStudentNotFound(StudentNotFoundException ex, WebRequest request) {
-        ErrorDetails errorDetails = new ErrorDetails("Student not found", ex.getMessage());
+    @ExceptionHandler(TeacherNotFoundException.class)
+    public ResponseEntity<Object> handleTeacherNotFound(TeacherNotFoundException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails("Teacher not found", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
