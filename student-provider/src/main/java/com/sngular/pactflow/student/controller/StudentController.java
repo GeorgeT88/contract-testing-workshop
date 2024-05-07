@@ -1,8 +1,13 @@
 package com.sngular.pactflow.student.controller;
 
+import com.sngular.pactflow.student.exceptions.ErrorDetails;
 import com.sngular.pactflow.student.exceptions.StudentNotFoundException;
 import com.sngular.pactflow.student.model.Student;
 import com.sngular.pactflow.student.repository.StudentRepository;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +30,10 @@ public class StudentController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponse(responseCode = "201", description = "Student created successfully",
+            content = @Content(schema = @Schema(implementation = Student.class)),
+            headers = @Header(name = "Location", description = "URL of the created student", schema = @Schema(type = "string")))
+    @ApiResponse(responseCode = "400", description = "Invalid input")
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         log.info("Creating student: {}", student);
         Student createdStudent = studentRepository.save(student);
@@ -42,12 +51,20 @@ public class StudentController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponse(responseCode = "200", description = "Student found",
+            content = @Content(schema = @Schema(implementation = Student.class)))
+    @ApiResponse(responseCode = "404", description = "Student not found",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetails.class)))
     public Student getStudent(@PathVariable Long id) {
         log.info("Retrieving student by ID: {}", id);
         return getStudentById(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponse(responseCode = "200", description = "Student updated successfully",
+            content = @Content(schema = @Schema(implementation = Student.class)))
+    @ApiResponse(responseCode = "404", description = "Student not found",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetails.class)))
     public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student student) {
         log.info("Updating student: {}", student);
         student.setId(getStudentById(id).getId());
@@ -55,6 +72,9 @@ public class StudentController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiResponse(responseCode = "204", description = "Student deleted")
+    @ApiResponse(responseCode = "404", description = "Student not found",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetails.class)))
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         log.info("Deleting student by ID: {}", id);
         studentRepository.deleteById(getStudentById(id).getId());

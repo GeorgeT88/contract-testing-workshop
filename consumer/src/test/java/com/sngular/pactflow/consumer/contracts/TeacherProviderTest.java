@@ -8,66 +8,109 @@ import au.com.dius.pact.core.model.V4Pact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import com.sngular.pactflow.consumer.model.Teacher;
 import com.sngular.pactflow.consumer.service.TeacherService;
+import com.sngular.pactflow.consumer.utils.DslBodyFactory;
+import com.sngular.pactflow.consumer.utils.Regex;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static au.com.dius.pact.consumer.dsl.LambdaDsl.newJsonArrayMinLike;
 import static au.com.dius.pact.consumer.dsl.LambdaDsl.newJsonBody;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.sngular.pactflow.consumer.utils.Assertions.assertHttpClientError;
+import static com.sngular.pactflow.consumer.utils.Assertions.assertTeacherDetails;
+import static com.sngular.pactflow.consumer.utils.DslBodyFactory.teacherSampleBody;
+import static com.sngular.pactflow.consumer.utils.FixtureFactory.getTeacherSample;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ExtendWith(PactConsumerTestExt.class)
 class TeacherProviderTest {
 
+    public static final String NO_TEACHERS_EXIST = "no teachers exist";
+    public static final String TEACHER_1_EXISTS = "teacher with ID 1 exists";
+    public static final String MULTIPLE_TEACHERS_EXISTS = "multiple teachers exist";
+
+    private TeacherService teacherService;
+
+    @Pact(consumer = "consumer", provider = "teacher-provider")
+    public V4Pact createTeacher(PactDslWithProvider builder) {
+        return builder
+                .given(NO_TEACHERS_EXIST)
+                .uponReceiving("create a teacher")
+                .method("POST")
+                .headers("Content-Type", "application/json")
+                .path("/teachers/")
+                .body(newJsonBody(DslBodyFactory::teacherSampleBody).build())
+                .willRespondWith()
+                .status(201)
+                .matchHeader("Location", Regex.POST_CREATION_LOCATION_HEADER, "/teachers/1")
+                .body(newJsonBody((object) -> {
+                    object.numberType("id", 1L);
+                    teacherSampleBody(object);
+                }).build())
+                .toPact().asV4Pact().get();
+    }
+
     @Pact(consumer = "consumer", provider = "teacher-provider")
     public V4Pact getTeacherWithId1(PactDslWithProvider builder) {
-        return builder.given("teacher 1 exists")
-                .uponReceiving("get an existing student with ID 1")
+        return builder.given(TEACHER_1_EXISTS)
+                .uponReceiving("get an existing teacher")
                 .path("/teachers/1")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
                 .headers(Map.of("Content-Type", "application/json"))
-                .body(newJsonBody(object -> {
-                    object.stringType("id", "1");
-                    object.stringType("name", "Fake name");
-                    object.stringType("email", "some.email@sngular.com");
-                    object.numberType("teacherNumber", 23);
+                .body(newJsonBody((object) -> {
+                    object.numberType("id", 1L);
+                    teacherSampleBody(object);
+                }).build())
+                .toPact().asV4Pact().get();
+    }
+
+    @Pact(consumer = "consumer", provider = "teacher-provider")
+    public V4Pact getNonExistingTeacher(PactDslWithProvider builder) {
+        return builder.given(NO_TEACHERS_EXIST)
+                .uponReceiving("get a non-existing teacher")
+                .path("/teachers/1")
+                .method("GET")
+                .willRespondWith()
+                .status(404)
+                .headers(Map.of("Content-Type", "application/json"))
+                .body(newJsonBody((object) -> {
+                    object.stringType("error", "Teacher not found");
+                    object.stringType("message", "Teacher with id 1 does not exist");
                 }).build())
                 .toPact().asV4Pact().get();
     }
 
     @Pact(consumer = "consumer", provider = "teacher-provider")
     public V4Pact getAllTeachers(PactDslWithProvider builder) {
-        return builder.given("teachers exist")
+        return builder.given(MULTIPLE_TEACHERS_EXISTS)
                 .uponReceiving("get all teachers")
                 .path("/teachers/")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
                 .headers(Map.of("Content-Type", "application/json"))
-                .body(newJsonArrayMinLike(2, array ->
-                        array.object(object -> {
-                            object.stringType("id", "2");
-                            object.stringType("name", "Another fake name");
-                            object.stringType("email", "another.email@sngular.com");
-                            object.numberType("teacherNumber", 24);
-                        })
-                ).build())
+                .body(newJsonArrayMinLike(2, array -> array.object((object) -> {
+                    object.numberType("id", 1L);
+                    teacherSampleBody(object);
+                })).build())
                 .toPact().asV4Pact().get();
     }
 
     @Pact(consumer = "consumer", provider = "teacher-provider")
     public V4Pact getAllTeachersEmptyResponse(PactDslWithProvider builder) {
-        return builder.given("no teachers exist")
-                .uponReceiving("get all teachers when no teacher exists")
+        return builder.given("NO_TEACHERS_EXIST")
+                .uponReceiving("get all teachers when no teachers exist")
                 .path("/teachers/")
                 .method("GET")
                 .willRespondWith()
@@ -77,44 +120,155 @@ class TeacherProviderTest {
                 .toPact().asV4Pact().get();
     }
 
+    @Pact(consumer = "consumer", provider = "teacher-provider")
+    public V4Pact updateTeacher(PactDslWithProvider builder) {
+        return builder
+                .given(TEACHER_1_EXISTS)
+                .uponReceiving("update an existing teacher")
+                .method("PUT")
+                .headers("Content-Type", "application/json")
+                .path("/teachers/1")
+                .body(newJsonBody(DslBodyFactory::teacherSampleBody).build())
+                .willRespondWith()
+                .status(200)
+                .body(newJsonBody((object) -> {
+                    object.numberType("id", 1L);
+                    teacherSampleBody(object);
+                }).build())
+                .toPact().asV4Pact().get();
+    }
+
+    @Pact(consumer = "consumer", provider = "teacher-provider")
+    public V4Pact updateNonExistentTeacher(PactDslWithProvider builder) {
+        return builder
+                .given(NO_TEACHERS_EXIST)
+                .uponReceiving("update a non-existent teacher")
+                .method("PUT")
+                .headers("Content-Type", "application/json")
+                .path("/teachers/1")
+                .body(newJsonBody(DslBodyFactory::teacherSampleBody).build())
+                .willRespondWith()
+                .status(404)
+                .body(newJsonBody((object) -> {
+                    object.stringType("error", "Teacher not found");
+                    object.stringType("message", "Teacher with id 1 does not exist");
+                }).build())
+                .toPact().asV4Pact().get();
+    }
+
+    @Pact(consumer = "consumer", provider = "teacher-provider")
+    public V4Pact deleteTeacher(PactDslWithProvider builder) {
+        return builder
+                .given(TEACHER_1_EXISTS)
+                .uponReceiving("delete an existing teacher")
+                .method("DELETE")
+                .path("/teachers/1")
+                .willRespondWith()
+                .status(204)
+                .toPact().asV4Pact().get();
+    }
+
+    @Pact(consumer = "consumer", provider = "teacher-provider")
+    public V4Pact deleteNonExistentTeacher(PactDslWithProvider builder) {
+        return builder
+                .given(NO_TEACHERS_EXIST)
+                .uponReceiving("a request to delete a non-existent teacher")
+                .method("DELETE")
+                .path("/teachers/1")
+                .willRespondWith()
+                .status(404)
+                .body(newJsonBody((object) -> {
+                    object.stringType("error", "Teacher not found");
+                    object.stringType("message", "Teacher with id 1 does not exist");
+                }).build())
+                .toPact().asV4Pact().get();
+    }
+
+    @BeforeEach
+    void setup(MockServer mockServer) {
+        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(mockServer.getUrl()).build();
+        teacherService = new TeacherService(restTemplate);
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "createTeacher")
+    void createTeacherTest() {
+        Teacher teacher = getTeacherSample();
+
+        Teacher createdTeacher = teacherService.createTeacher(teacher);
+
+        assertTeacherDetails(teacher, createdTeacher);
+    }
+
     @Test
     @PactTestFor(pactMethod = "getTeacherWithId1")
-    void getTeacherWhenTeacherExist(MockServer mockServer) {
-        Teacher expected = Teacher.builder()
-                .id("1")
-                .name("Fake name")
-                .email("some.email@sngular.com")
-                .teacherNumber(23).build();
+    void getTeacherWhenTeacherExists() {
+        Teacher expectedTeacher = getTeacherSample();
 
-        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(mockServer.getUrl()).build();
-        Teacher teacher = new TeacherService(restTemplate).getTeacher("1");
+        Teacher teacher = teacherService.getTeacher(1L);
 
-        assertEquals(expected, teacher);
+        assertTeacherDetails(expectedTeacher, teacher);
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "getNonExistingTeacher")
+    void getNonExistingTeacher() {
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> teacherService.getTeacher(1L));
+
+        assertHttpClientError(exception, HttpStatus.NOT_FOUND);
     }
 
     @Test
     @PactTestFor(pactMethod = "getAllTeachers")
-    void getTeachersWhenTeachersExist(MockServer mockServer) {
-        Teacher teacher = Teacher.builder()
-                .id("2")
-                .name("Another fake name")
-                .email("another.email@sngular.com")
-                .teacherNumber(24).build();
+    void getAllTeachersWhenTeachersExist() {
+        Teacher expected = getTeacherSample();
 
-        List<Teacher> expected = List.of(teacher, teacher);
+        List<Teacher> teachers = teacherService.getTeachers();
 
-        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(mockServer.getUrl()).build();
-        List<Teacher> teachers = new TeacherService(restTemplate).getTeachers();
-
-        assertEquals(expected, teachers);
+        assertFalse(teachers.isEmpty());
+        assertEquals(2, teachers.size());
+        teachers.forEach(teacher -> assertTeacherDetails(expected, teacher));
     }
 
     @Test
     @PactTestFor(pactMethod = "getAllTeachersEmptyResponse")
-    void getTeachersWhenNoTeachersExistTest(MockServer mockServer) {
-        RestTemplate restTemplate = new RestTemplateBuilder().rootUri(mockServer.getUrl()).build();
-        List<Teacher> teachers = new TeacherService(restTemplate).getTeachers();
+    void getAllTeachersWhenNoTeachersExist() {
+        List<Teacher> teachers = teacherService.getTeachers();
 
-        assertEquals(Collections.emptyList(), teachers);
+        assertTrue(teachers.isEmpty());
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "updateTeacher")
+    void updateTeacherTest() {
+        Teacher teacher = getTeacherSample();
+
+        Teacher updatedTeacher = teacherService.updateTeacher(1L, teacher);
+
+        assertTeacherDetails(teacher, updatedTeacher);
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "updateNonExistentTeacher")
+    void updateNonExistentTeacherTest() {
+        Teacher nonExistentTeacher = getTeacherSample();
+
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> teacherService.updateTeacher(1L, nonExistentTeacher));
+
+        assertHttpClientError(exception, HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "deleteTeacher")
+    void deleteTeacherTest() {
+        assertDoesNotThrow(() -> teacherService.deleteTeacher(1L));
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "deleteNonExistentTeacher")
+    void testDeleteNonExistentTeacher() {
+        HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> teacherService.deleteTeacher(1L));
+
+        assertHttpClientError(exception, HttpStatus.NOT_FOUND);
     }
 }
