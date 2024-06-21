@@ -70,7 +70,7 @@ pact-cli:
 consumer:
   stage: build
   script:
-    - echo PACTICIPANT="student-consumer" >> environment.env
+    - echo PACTICIPANT="consumer" >> environment.env
     - echo PACTS_FOLDER="consumer/target/pacts" >> environment.env
     - mvn -f consumer/pom.xml $MAVEN_CLI_OPTS clean install
   artifacts:
