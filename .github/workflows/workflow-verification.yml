@@ -1,4 +1,4 @@
-name: '[Verification] - Cross-component contract testing'
+name: '[Support] - Verification pipeline.'
 
 on:
   repository_dispatch:

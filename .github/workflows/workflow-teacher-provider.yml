@@ -1,4 +1,4 @@
-name: '[Teacher Provider] - Build, Publish OpenAPI & Deploy'
+name: '[Workflow] - Teacher provider (bidirectional)'
 
 on:
   workflow_dispatch:
@@ -45,7 +45,7 @@ jobs:
   publish_openapi:
     name: Publish OpenAPI Specification
     needs: build
-    uses: ./.github/workflows/publish-openapi.yml
+    uses: ./.github/workflows/reusable-publish-openapi.yml
     with:
       pact_broker_base_url: ${{ env.PACT_BROKER_BASE_URL }}
       provider_name: ${{ env.PACTICIPANT }}
@@ -62,7 +62,7 @@ jobs:
     name: Can I Deploy?
     if: github.event.inputs.environment != 'NONE'
     needs: publish_openapi
-    uses: ./.github/workflows/can-i-deploy.yml
+    uses: ./.github/workflows/reusable-can-i-reusable-deploy.yml
     with:
       pact_broker_base_url: ${{ env.PACT_BROKER_BASE_URL }}
       pacticipant: ${{ env.PACTICIPANT }}
@@ -75,7 +75,7 @@ jobs:
     name: Deploy to ${{ github.event.inputs.environment }}
     if: github.event.inputs.environment != 'NONE'
     needs: can_i_deploy
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/reusable-deploy.yml
     with:
       pacticipant: ${{ env.PACTICIPANT }}
       version: ${{ github.sha }}

@@ -1,5 +1,5 @@
-# Reusable workflow to check if a component version can be deployed to an environment.
-name: 'Pact - Can I Deploy'
+# Reusable workflow to record (tag) a deployment in the Pact Broker.
+name: 'Reusable - Tag deployment'
 
 on:
   workflow_call:
@@ -8,15 +8,15 @@ on:
         required: true
         type: string
       pacticipant:
-        description: 'The name of the component being deployed.'
+        description: 'Name of the pacticipant (consumer or provider) to be registered.'
         required: true
         type: string
       version:
-        description: 'The version of the component.'
+        description: 'The version of the pacticipant.'
         required: true
         type: string
       environment:
-        description: 'The target environment for the deployment.'
+        description: 'Environment for the tagging.'
         required: true
         type: string
     secrets:
@@ -24,20 +24,18 @@ on:
         required: true
 
 jobs:
-  can-i-deploy:
+  tag-deployment:
     runs-on: ubuntu-latest
     steps:
       - name: 'Setup Pact CLI'
         uses: ./.github/actions/pact-cli-setup
 
-      - name: 'Pact Broker Can I Deploy'
+      - name: 'Record deployment in Pact Broker'
         env:
           PACT_BROKER_BASE_URL: ${{ inputs.pact_broker_base_url }}
           PACT_BROKER_TOKEN: ${{ secrets.pact_broker_token }}
         run: |
-          pact-broker can-i-deploy \
+          pact-broker record-deployment \
             --pacticipant ${{ inputs.pacticipant }} \
             --version ${{ inputs.version }} \
-            --to-environment ${{ inputs.environment }} \
-            --retry-while-unknown=5 \
-            --retry-interval=15
+            --environment ${{ inputs.environment }}

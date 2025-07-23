@@ -1,5 +1,5 @@
 # Reusable workflow to publish a provider's OpenAPI contract.
-name: 'Pact - Publish OpenAPI'
+name: 'Reusable - Publish OpenAPI'
 
 on:
   workflow_call:

@@ -1,5 +1,5 @@
 # Reusable workflow to simulate a deployment for didactic purposes.
-name: 'Deploy Component'
+name: 'Reusable - Deploy'
 
 on:
   workflow_call:

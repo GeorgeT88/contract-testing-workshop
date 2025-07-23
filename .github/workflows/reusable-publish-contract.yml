@@ -1,5 +1,5 @@
 # Reusable workflow to publish consumer pact contracts to the broker.
-name: 'Pact - Publish Contract'
+name: 'Reusable - Publish contract'
 
 on:
   workflow_call:
