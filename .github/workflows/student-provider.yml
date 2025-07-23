@@ -39,7 +39,7 @@ jobs:
     name: Can I Deploy?
     if: github.event.inputs.environment != 'NONE'
     needs: build_and_verify
-    uses: ./.github/workflows/reusables/can-i-deploy.yml
+    uses: ./.github/workflows/can-i-deploy.yml
     with:
       pact_broker_base_url: ${{ env.PACT_BROKER_BASE_URL }}
       pacticipant: ${{ env.PACTICIPANT }}
@@ -51,8 +51,8 @@ jobs:
   deploy:
     name: Deploy to ${{ github.event.inputs.environment }}
     if: github.event.inputs.environment != 'NONE'
-    needs: check_deployment_gate
-    uses: ./.github/workflows/reusables/deploy.yml
+    needs: can_i_deploy
+    uses: ./.github/workflows/deploy.yml
     with:
       pacticipant: ${{ env.PACTICIPANT }}
       version: ${{ github.sha }}
@@ -61,8 +61,8 @@ jobs:
   tag_deployment:
     name: Tag Deployment in Pact Broker
     if: github.event.inputs.environment != 'NONE'
-    needs: perform_deployment
-    uses: ./.github/workflows/reusables/tagging.yml
+    needs: deploy
+    uses: ./.github/workflows/tagging.yml
     with:
       pact_broker_base_url: ${{ env.PACT_BROKER_BASE_URL }}
       pacticipant: ${{ env.PACTICIPANT }}
