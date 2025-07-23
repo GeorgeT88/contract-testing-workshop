@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment to deploy to. Select 'NONE' for build only."
+        description: "Environment to deploy to. Select 'none' for build only."
         required: true
         type: choice
-        default: 'NONE'
-        options: [ NONE, DEV, PRE, PROD ]
+        default: 'none'
+        options: [ none, test, production ]
 
 env:
   MAVEN_CLI_OPTS: >
@@ -34,15 +34,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      # Pasos 1: Preparar el entorno una sola vez
       - name: Checkout repository code
         uses: actions/checkout@v4
+
       - name: Setup Pact CLI
         uses: ./.github/actions/pact-cli-setup
 
-      # Paso 2: Ejecutar la secuencia de acciones
       - name: Publish Contract to Pact Broker
-        uses: ./.github/actions/publish-contract/action.yml
+        uses: ./.github/actions/publish-contract
         with:
           pact_broker_base_url: ${{ vars.PACT_BROKER_BASE_URL }}
           consumer_version: ${{ github.sha }}
@@ -51,8 +50,8 @@ jobs:
           pact_broker_token: ${{ secrets.PACTFLOW_TOKEN }}
 
       - name: Can I Deploy?
-        if: github.event.inputs.environment != 'NONE'
-        uses: ./.github/actions/can-i-deploy/action.yml
+        if: github.event.inputs.environment != 'none'
+        uses: ./.github/actions/can-i-deploy
         with:
           pact_broker_base_url: ${{ vars.PACT_BROKER_BASE_URL }}
           pacticipant: 'consumer'
@@ -61,16 +60,16 @@ jobs:
           pact_broker_token: ${{ secrets.PACTFLOW_TOKEN }}
 
       - name: Deploy
-        if: github.event.inputs.environment != 'NONE'
-        uses: ./.github/actions/deploy/action.yml
+        if: github.event.inputs.environment != 'none'
+        uses: ./.github/actions/deploy
         with:
           pacticipant: 'consumer'
           version: ${{ github.sha }}
           environment: ${{ github.event.inputs.environment }}
 
       - name: Tag Deployment
-        if: github.event.inputs.environment != 'NONE'
-        uses: ./.github/actions/tagging/action.yml
+        if: github.event.inputs.environment != 'none'
+        uses: ./.github/actions/tagging
         with:
           pact_broker_base_url: ${{ vars.PACT_BROKER_BASE_URL }}
           pacticipant: 'consumer'

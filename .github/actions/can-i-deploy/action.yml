@@ -12,7 +12,7 @@ inputs:
     description: 'The version of the component to check (e.g., commit SHA).'
     required: true
   environment:
-    description: 'The target environment for the check (e.g., DEV, PROD).'
+    description: 'The target environment for the check (e.g., test, production).'
     required: true
   pact_broker_token:
     description: 'The authentication token for the Pact Broker.'
