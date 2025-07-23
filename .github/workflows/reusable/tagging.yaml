@@ -1,0 +1,41 @@
+# Reusable workflow to record (tag) a deployment in the Pact Broker.
+name: 'Pact - Tag Deployment'
+
+on:
+  workflow_call:
+    inputs:
+      pact_broker_base_url:
+        required: true
+        type: string
+      pacticipant:
+        description: 'Name of the pacticipant (consumer or provider) to be registered.'
+        required: true
+        type: string
+      version:
+        description: 'The version of the pacticipant.'
+        required: true
+        type: string
+      environment:
+        description: 'Environment for the tagging.'
+        required: true
+        type: string
+    secrets:
+      pact_broker_token:
+        required: true
+
+jobs:
+  tag-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Setup Pact CLI'
+        uses: ./.github/actions/pact-cli-setup
+
+      - name: 'Record deployment in Pact Broker'
+        env:
+          PACT_BROKER_BASE_URL: ${{ inputs.pact_broker_base_url }}
+          PACT_BROKER_TOKEN: ${{ secrets.pact_broker_token }}
+        run: |
+          pact-broker record-deployment \
+            --pacticipant ${{ inputs.pacticipant }} \
+            --version ${{ inputs.version }} \
+            --environment ${{ inputs.environment }}

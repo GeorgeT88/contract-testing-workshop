@@ -9,14 +9,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sngular.pactflow</groupId>
+    <groupId>com.apenlor.pactflow</groupId>
     <artifactId>student-provider</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Student Provider</name>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <javafaker.version>1.0.2</javafaker.version>
         <h2.version>2.2.224</h2.version>
         <lombok.version>1.18.32</lombok.version>

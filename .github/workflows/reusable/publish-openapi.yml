@@ -1,0 +1,73 @@
+# Reusable workflow to publish a provider's OpenAPI contract.
+name: 'Pact - Publish OpenAPI'
+
+on:
+  workflow_call:
+    inputs:
+      pact_broker_base_url:
+        required: true
+        type: string
+      provider_name:
+        description: 'The name of the provider.'
+        required: true
+        type: string
+      provider_version:
+        description: 'The version of the provider.'
+        required: true
+        type: string
+      branch_name:
+        description: 'Name of the branch that originates the provider version.'
+        required: true
+        type: string
+      openapi_artifact_name:
+        description: 'The name of the artifact containing the openapi to publish.'
+        required: true
+        type: string
+      openapi_file_path:
+        description: 'Path to the openapi file within the workspace after download.'
+        required: true
+        type: string
+      verification_artifact_name:
+        description: 'The name of the artifact containing the verification results to publish.'
+        required: true
+        type: string
+      verification_file_path:
+        description: 'Path to the verification results file after download.'
+        required: true
+        type: string
+    secrets:
+      pact_broker_token:
+        required: true
+
+jobs:
+  publish-openapi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Setup Pact CLI'
+        uses: ./.github/actions/pact-cli-setup
+
+      - name: 'Download OpenAPI artifact'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.openapi_artifact_name }}
+
+      - name: 'Download verification results artifact'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.verification_artifact_name }}
+
+      - name: 'Publish OpenAPI contract'
+        env:
+          PACT_BROKER_BASE_URL: ${{ inputs.pact_broker_base_url }}
+          PACT_BROKER_TOKEN: ${{ secrets.pact_broker_token }}
+        run: |
+          pactflow publish-provider-contract ${{ inputs.openapi_file_path }} \
+            --provider=${{ inputs.provider_name }} \
+            --provider-app-version=${{ inputs.provider_version }} \
+            --branch=${{ inputs.branch_name }} \
+            --specification=oas \
+            --content-type=application/yaml \
+            --verification-success \
+            --verifier=springdoc-openapi \
+            --verification-results=${{ inputs.verification_file_path }} \
+            --verification-results-content-type=text/plain
