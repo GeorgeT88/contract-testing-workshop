@@ -1,4 +1,4 @@
-name: '[Support] - Verification pipeline.'
+name: '[Support] - Verification pipeline'
 
 on:
   repository_dispatch:
