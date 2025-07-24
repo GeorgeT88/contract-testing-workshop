@@ -263,6 +263,10 @@ This project uses separate, manually-triggered workflows for each component. You
 
 This section explains how the automation is configured. The core principle is a set of main workflows that use smaller, reusable **Composite Actions** to perform common tasks.
 
+<div align="center">
+<img src="images/pipelines-diagram.png" alt="Verification pipeline webhook" width="951"/>
+</div>
+
 ### Core Workflows
 
 Located in `.github/workflows/`, these are the workflows you can execute manually:
