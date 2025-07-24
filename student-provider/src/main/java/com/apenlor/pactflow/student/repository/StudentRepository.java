@@ -1,6 +1,6 @@
 package com.apenlor.pactflow.student.repository;
 
-import com.apenlor.pactflow.student.model.Student;
+import com.apenlor.pactflow.student.entities.Student;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

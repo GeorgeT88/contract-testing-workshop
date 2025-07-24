@@ -44,7 +44,7 @@ For this workshop, we assume participants have a foundational knowledge of contr
 ### Software
 
 - Maven 3.x
-- JDK 17+
+- JDK 21+
 
 ### Platform
 

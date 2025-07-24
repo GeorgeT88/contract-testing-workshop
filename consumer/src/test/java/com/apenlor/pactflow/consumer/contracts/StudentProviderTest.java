@@ -47,7 +47,7 @@ class StudentProviderTest {
                 .uponReceiving("create a student")
                 .method("POST")
                 .headers("Content-Type", "application/json")
-                .path("/students/")
+                .path("/students")
                 .body(newJsonBody(DslBodyFactory::studentSampleBody).build())
                 .willRespondWith()
                 .status(201)
@@ -95,7 +95,7 @@ class StudentProviderTest {
     public V4Pact getAllStudents(PactDslWithProvider builder) {
         return builder.given(MULTIPLE_STUDENTS_EXISTS)
                 .uponReceiving("get all students")
-                .path("/students/")
+                .path("/students")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
@@ -111,7 +111,7 @@ class StudentProviderTest {
     public V4Pact getAllStudentsEmptyResponse(PactDslWithProvider builder) {
         return builder.given(NO_STUDENTS_EXIST)
                 .uponReceiving("get all students when no students exists")
-                .path("/students/")
+                .path("/students")
                 .method("GET")
                 .willRespondWith()
                 .status(200)

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.4</version>
+        <version>3.5.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,9 +18,9 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <javafaker.version>1.0.2</javafaker.version>
-        <h2.version>2.2.224</h2.version>
-        <lombok.version>1.18.32</lombok.version>
-        <pact.version>4.6.8</pact.version>
+        <h2.version>2.3.232</h2.version>
+        <lombok.version>1.18.38</lombok.version>
+        <pact.version>4.6.17</pact.version>
     </properties>
 
     <dependencies>

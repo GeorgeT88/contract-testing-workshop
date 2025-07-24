@@ -1,8 +1,9 @@
 package com.apenlor.pactflow.teacher.controller;
 
+import com.apenlor.pactflow.teacher.annotations.TechnicalDebt;
 import com.apenlor.pactflow.teacher.exceptions.ErrorDetails;
 import com.apenlor.pactflow.teacher.exceptions.TeacherNotFoundException;
-import com.apenlor.pactflow.teacher.model.Teacher;
+import com.apenlor.pactflow.teacher.entities.Teacher;
 import com.apenlor.pactflow.teacher.repository.TeacherRepository;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,6 +22,13 @@ import java.util.stream.StreamSupport;
 @RestController
 @RequestMapping("/teachers")
 @Slf4j
+@TechnicalDebt(
+        issue = "Controller is using JPA entities directly for request/response bodies.",
+        solution = "Introduce Data Transfer Objects (DTOs) for API contracts. " +
+                "Create TeacherRequestDTO and TeacherResponseDTO classes and use a " +
+                "mapper (e.g., MapStruct) to convert between DTOs and the Teacher entity. " +
+                "This was omitted to simplify the setup for the contract testing workshop."
+)
 public class TeacherController {
 
     private final TeacherRepository teacherRepository;

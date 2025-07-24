@@ -14,7 +14,8 @@ import java.util.List;
 @Service
 public class StudentService {
 
-    private static final String BASE_URI_STUDENTS = "/students/";
+    private static final String BASE_URI_STUDENTS = "/students";
+    private static final String URI_STUDENT_BY_ID = BASE_URI_STUDENTS + "/{id}";
 
     private final RestTemplate restTemplate;
 
@@ -28,7 +29,7 @@ public class StudentService {
     }
 
     public Student getStudent(Long id) {
-        return restTemplate.getForObject(BASE_URI_STUDENTS + id, Student.class);
+        return restTemplate.getForObject(URI_STUDENT_BY_ID, Student.class, id);
     }
 
     public List<Student> getStudents() {
@@ -37,12 +38,11 @@ public class StudentService {
     }
 
     public Student updateStudent(Long id, Student student) {
-        HttpHeaders headers = new HttpHeaders();
-        HttpEntity<Student> entity = new HttpEntity<>(student, headers);
-        return restTemplate.exchange(BASE_URI_STUDENTS + id, HttpMethod.PUT, entity, Student.class).getBody();
+        HttpEntity<Student> entity = new HttpEntity<>(student, new HttpHeaders());
+        return restTemplate.exchange(URI_STUDENT_BY_ID, HttpMethod.PUT, entity, Student.class, id).getBody();
     }
 
     public void deleteStudent(Long id) {
-        restTemplate.delete(BASE_URI_STUDENTS + id);
+        restTemplate.delete(URI_STUDENT_BY_ID, id);
     }
 }

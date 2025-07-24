@@ -1,4 +1,4 @@
-package com.apenlor.pactflow.student.model;
+package com.apenlor.pactflow.student.entities;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

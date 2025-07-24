@@ -1,4 +1,4 @@
-package com.apenlor.pactflow.student.model;
+package com.apenlor.pactflow.student.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

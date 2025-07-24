@@ -47,7 +47,7 @@ class TeacherProviderTest {
                 .uponReceiving("create a teacher")
                 .method("POST")
                 .headers("Content-Type", "application/json")
-                .path("/teachers/")
+                .path("/teachers")
                 .body(newJsonBody(DslBodyFactory::teacherSampleBody).build())
                 .willRespondWith()
                 .status(201)
@@ -95,7 +95,7 @@ class TeacherProviderTest {
     public V4Pact getAllTeachers(PactDslWithProvider builder) {
         return builder.given(MULTIPLE_TEACHERS_EXISTS)
                 .uponReceiving("get all teachers")
-                .path("/teachers/")
+                .path("/teachers")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
@@ -111,7 +111,7 @@ class TeacherProviderTest {
     public V4Pact getAllTeachersEmptyResponse(PactDslWithProvider builder) {
         return builder.given("NO_TEACHERS_EXIST")
                 .uponReceiving("get all teachers when no teachers exist")
-                .path("/teachers/")
+                .path("/teachers")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
