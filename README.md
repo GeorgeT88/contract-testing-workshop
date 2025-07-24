@@ -1,4 +1,5 @@
 # Contract Testing with PactFlow - Workshop
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/31b8f6f078974887811d865cb5976ac4)](https://app.codacy.com/gh/apenlor/contract-testing-workshop/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ### Table of Contents
 
