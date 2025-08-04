@@ -62,7 +62,7 @@ class StudentProviderTest {
     @Pact(consumer = "consumer", provider = "student-provider")
     public V4Pact getStudentWithId1(PactDslWithProvider builder) {
         return builder.given(STUDENT_1_EXISTS)
-                .uponReceiving("get an existing student")
+                .uponReceiving("get an existing student with ID 1 - updated")
                 .path("/students/1")
                 .method("GET")
                 .willRespondWith()
