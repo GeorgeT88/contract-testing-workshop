@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * It serves as a formal record of technical debt.
  */
 @Target({ElementType.TYPE, ElementType.METHOD}) // Can be used on classes or methods
-@Retention(RetentionPolicy.SOURCE) // Only needed at compile time, not at runtime
+@Retention(RetentionPolicy.SOURCE) // Only needed at compile time, not at runtime!
 public @interface TechnicalDebt {
 
     /**
