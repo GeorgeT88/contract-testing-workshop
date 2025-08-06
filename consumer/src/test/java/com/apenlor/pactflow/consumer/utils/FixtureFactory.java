@@ -65,6 +65,7 @@ public class FixtureFactory {
         return Location.builder()
                 .name("Jane Doe")
                 .location("New York")
+                .test(1)
                 .build();
     }
 }
