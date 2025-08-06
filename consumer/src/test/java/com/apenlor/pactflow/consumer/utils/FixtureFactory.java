@@ -59,4 +59,12 @@ public class FixtureFactory {
                 .taughtCourses(taughtCourses)
                 .build();
     }
+
+    public static Location getLocationSample() {
+
+        return Location.builder()
+                .name("Jane Doe")
+                .location("New York")
+                .build();
+    }
 }

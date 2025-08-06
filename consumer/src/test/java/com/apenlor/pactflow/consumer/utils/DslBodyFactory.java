@@ -42,4 +42,10 @@ public class DslBodyFactory {
             course.numberType("credits", 3);
         });
     }
+
+    public static void locationSampleBody(LambdaDslObject object) {
+        object.stringType("name", "Jane Doe");
+        object.stringType("location", "New York");
+
+    }
 }

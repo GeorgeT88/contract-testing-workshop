@@ -1,5 +1,6 @@
 package com.apenlor.pactflow.consumer.utils;
 
+import com.apenlor.pactflow.consumer.model.Location;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,13 @@ public class Assertions {
         assertEquals(expected.getEmail(), actual.getEmail());
         assertEquals(expected.getSpeciality(), actual.getSpeciality());
         assertEquals(expected.getTaughtCourses(), actual.getTaughtCourses());
+    }
+
+    public static void assertLocationDetails(Location expected, Location actual) {
+        assertNotNull(actual);
+        assertEquals(1L, actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getLocation(), actual.getLocation());
     }
 
     public static void assertStudentDetails(Student expected, Student actual) {
