@@ -1,10 +1,10 @@
-package com.apenlor.pactflow.teacher.controller;
+package com.apenlor.pactflow.location.controller;
 
-import com.apenlor.pactflow.teacher.annotations.TechnicalDebt;
-import com.apenlor.pactflow.teacher.entities.Location;
-import com.apenlor.pactflow.teacher.exceptions.ErrorDetails;
-import com.apenlor.pactflow.teacher.exceptions.LocationNotFoundException;
-import com.apenlor.pactflow.teacher.repository.LocationRepository;
+import com.apenlor.pactflow.location.annotations.TechnicalDebt;
+import com.apenlor.pactflow.location.entities.Location;
+import com.apenlor.pactflow.location.exceptions.ErrorDetails;
+import com.apenlor.pactflow.location.exceptions.LocationNotFoundException;
+import com.apenlor.pactflow.location.repository.LocationRepository;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,4 +1,4 @@
-package com.apenlor.pactflow.teacher.exceptions;
+package com.apenlor.pactflow.location.exceptions;
 
 public class LocationNotFoundException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package com.apenlor.pactflow.teacher.exceptions;
+package com.apenlor.pactflow.location.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

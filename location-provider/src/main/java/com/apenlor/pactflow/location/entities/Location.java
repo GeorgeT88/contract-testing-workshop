@@ -1,4 +1,4 @@
-package com.apenlor.pactflow.teacher.entities;
+package com.apenlor.pactflow.location.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -26,5 +26,7 @@ public class Location {
     private String name;
 
     private String location;
+
+    private String test;
 
 }

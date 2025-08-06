@@ -1,6 +1,6 @@
-package com.apenlor.pactflow.teacher.repository;
+package com.apenlor.pactflow.location.repository;
 
-import com.apenlor.pactflow.teacher.entities.Location;
+import com.apenlor.pactflow.location.entities.Location;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

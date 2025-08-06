@@ -1,4 +1,4 @@
-package com.apenlor.pactflow.teacher.annotations;
+package com.apenlor.pactflow.location.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package com.apenlor.pactflow.teacher;
+package com.apenlor.pactflow.location;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
