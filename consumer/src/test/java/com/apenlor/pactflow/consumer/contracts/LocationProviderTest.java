@@ -76,7 +76,7 @@ class LocationProviderTest {
     }
 
     @Pact(consumer = "consumer", provider = "location-provider")
-    public V4Pact getNonExistinglocation(PactDslWithProvider builder) {
+    public V4Pact getNonExistingLocation(PactDslWithProvider builder) {
         return builder.given(NO_LOCATIONS_EXIST)
                 .uponReceiving("get a non-existing location")
                 .path("/locations/1")
