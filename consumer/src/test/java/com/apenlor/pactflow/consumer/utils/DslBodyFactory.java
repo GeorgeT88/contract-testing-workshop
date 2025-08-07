@@ -46,6 +46,7 @@ public class DslBodyFactory {
     public static void locationSampleBody(LambdaDslObject object) {
         object.stringType("name", "Jane Doe");
         object.stringType("location", "New York");
+        object.numberType("test", 1);
 
     }
 }
