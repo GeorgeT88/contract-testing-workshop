@@ -3,6 +3,7 @@ package com.apenlor.pactflow.consumer.utils;
 import au.com.dius.pact.consumer.dsl.LambdaDslObject;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class DslBodyFactory {
 
@@ -48,5 +49,18 @@ public class DslBodyFactory {
         object.stringType("location", "New York");
         object.numberType("test", 1);
 
+    }
+
+    public static void breedsSampleBody(LambdaDslObject object) {
+        object.array("message", array -> {
+            array.stringValue("afghan");
+            array.stringValue("basset");
+            array.stringValue("blood");
+            array.stringValue("english");
+            array.stringValue("ibizan");
+            array.stringValue("plott");
+            array.stringValue("walker");
+        });
+        object.stringType("status", "success");
     }
 }

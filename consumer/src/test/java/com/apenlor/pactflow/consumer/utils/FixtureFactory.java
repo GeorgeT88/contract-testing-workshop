@@ -68,4 +68,17 @@ public class FixtureFactory {
                 .test(1)
                 .build();
     }
+
+    public static Breeds getBreedsSample() {
+        return Breeds.builder()
+                .message(List.of("afghan",
+                        "basset",
+                        "blood",
+                        "english",
+                        "ibizan",
+                        "plott",
+                        "walker"))
+                .status("success")
+                .build();
+    }
 }
