@@ -32,7 +32,7 @@ class DogProviderTest {
     public V4Pact getHoundSubBreeds(PactDslWithProvider builder) {
         return builder.given("multiple dog sub-breeds exist")
                 .uponReceiving("get all dog sub-breeds")
-                .path("/breed/hound/list")
+                .path("/dogs")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
