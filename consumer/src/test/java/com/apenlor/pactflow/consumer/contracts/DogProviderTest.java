@@ -19,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 
 import static au.com.dius.pact.consumer.dsl.LambdaDsl.newJsonBody;
-import static com.apenlor.pactflow.consumer.utils.DslBodyFactory.breedsSampleBody;
 import static com.apenlor.pactflow.consumer.utils.FixtureFactory.getBreedsSample;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +28,7 @@ class DogProviderTest {
 
     private DogService dogService;
 
-    @Pact(consumer = "consumer", provider = "location-provider")
+    @Pact(consumer = "consumer", provider = "dog-provider")
     public V4Pact getHoundSubBreeds(PactDslWithProvider builder) {
         return builder.given("multiple dog sub-breeds exist")
                 .uponReceiving("get all dog sub-breeds")
