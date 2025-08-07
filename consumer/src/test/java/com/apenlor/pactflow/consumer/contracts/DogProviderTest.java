@@ -8,6 +8,7 @@ import au.com.dius.pact.core.model.V4Pact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import com.apenlor.pactflow.consumer.model.Breeds;
 import com.apenlor.pactflow.consumer.service.DogService;
+import com.apenlor.pactflow.consumer.utils.DslBodyFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,9 +38,7 @@ class DogProviderTest {
                 .willRespondWith()
                 .status(200)
                 .headers(Map.of("Content-Type", "application/json"))
-                .body(newJsonBody(object -> {
-                    breedsSampleBody(object);
-                }).build())
+                .body(newJsonBody(DslBodyFactory::breedsSampleBody).build())
                 .toPact().asV4Pact().get();
     }
 
