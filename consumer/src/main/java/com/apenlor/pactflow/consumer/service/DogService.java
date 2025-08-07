@@ -15,8 +15,7 @@ import java.util.List;
 @Service
 public class DogService {
 
-    private static final String BASE_URI_LOCATIONS = "/locations";
-    private static final String URI_LOCATION_BY_ID = BASE_URI_LOCATIONS + "/{id}";
+    private static final String BASE_URI_DOGS = "/dogs";
 
     private final RestTemplate restTemplate;
 
@@ -26,7 +25,7 @@ public class DogService {
     }
 
     public Breeds getBreeds() {
-        return restTemplate.getForObject(URI_LOCATION_BY_ID, Breeds.class);
+        return restTemplate.getForObject(BASE_URI_DOGS, Breeds.class);
     }
 
 }
