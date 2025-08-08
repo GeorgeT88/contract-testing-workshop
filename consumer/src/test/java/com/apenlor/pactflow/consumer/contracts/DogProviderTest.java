@@ -1,6 +1,7 @@
 package com.apenlor.pactflow.consumer.contracts;
 
 import au.com.dius.pact.consumer.MockServer;
+import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
 import au.com.dius.pact.consumer.junit5.PactConsumerTestExt;
 import au.com.dius.pact.consumer.junit5.PactTestFor;
@@ -52,7 +53,9 @@ class DogProviderTest {
                 .willRespondWith()
                 .status(200)
                 .headers(Map.of("Content-Type", "application/json"))
-                .body(newJsonBody(DslBodyFactory::randomDogImageBody).build())
+                .body(new PactDslJsonBody()
+                        .stringType("message", "success")
+                        .stringType("status", "success"))
                 .toPact().asV4Pact().get();
     }
 
