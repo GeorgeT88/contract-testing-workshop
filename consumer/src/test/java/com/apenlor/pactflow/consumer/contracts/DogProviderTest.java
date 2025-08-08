@@ -55,7 +55,8 @@ class DogProviderTest {
                 .headers(Map.of("Content-Type", "application/json"))
                 .body(new PactDslJsonBody()
                         .stringType("message", "success")
-                        .stringType("status", "success"))
+                        .stringType("status", "success")
+                        .asBody())
                 .toPact().asV4Pact().get();
     }
 
