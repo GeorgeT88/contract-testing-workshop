@@ -81,4 +81,11 @@ public class FixtureFactory {
                 .status("success")
                 .build();
     }
+
+    public static RandomDogImage getRandomDogImageSample() {
+        return RandomDogImage.builder()
+                .message("success")
+                .status("success")
+                .build();
+    }
 }

@@ -63,4 +63,9 @@ public class DslBodyFactory {
         });
         object.stringType("status", "success");
     }
+
+    public static void randomDogImageBody(LambdaDslObject object) {
+        object.stringType("message", "success");
+        object.stringType("status", "success");
+    }
 }
