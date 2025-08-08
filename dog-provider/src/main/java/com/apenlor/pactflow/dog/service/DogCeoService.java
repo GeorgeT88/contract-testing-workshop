@@ -23,7 +23,7 @@ public class DogCeoService {
 
     public RandomDogImageResponse getRandomDogImage() {
         return webClient.get()
-                .uri("/breed/breeds/image/random")
+                .uri("/breeds/image/random")
                 .retrieve()
                 .bodyToMono(RandomDogImageResponse.class).block();
     }

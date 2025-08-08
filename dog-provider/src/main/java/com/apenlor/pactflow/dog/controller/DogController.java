@@ -25,7 +25,7 @@ public class DogController {
         return dogCeoService.getHoundSubBreeds();
     }
 
-    @GetMapping()
+    @GetMapping("/random")
     public RandomDogImageResponse getRandomDogImage() {
         log.info("Random dog image requested");
         return dogCeoService.getRandomDogImage();
