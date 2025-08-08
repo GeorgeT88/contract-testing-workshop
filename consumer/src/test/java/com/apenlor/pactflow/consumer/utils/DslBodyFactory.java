@@ -52,14 +52,8 @@ public class DslBodyFactory {
     }
 
     public static void breedsSampleBody(LambdaDslObject object) {
-        object.array("message", array -> {
-            array.stringValue("afghan");
-            array.stringValue("basset");
-            array.stringValue("blood");
-            array.stringValue("english");
-            array.stringValue("ibizan");
-            array.stringValue("plott");
-            array.stringValue("walker");
+        object.minArrayLike("message", 3, array -> {
+            array.stringType("breed");
         });
         object.stringType("status", "success");
     }
