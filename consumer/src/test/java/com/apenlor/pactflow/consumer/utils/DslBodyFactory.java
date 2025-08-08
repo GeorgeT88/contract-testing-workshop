@@ -52,7 +52,13 @@ public class DslBodyFactory {
     }
 
     public static void breedsSampleBody(LambdaDslObject object) {
-        object.array("message", array -> array.stringType("afghan"));
+        object.array("message", array -> array.stringType("afghan")
+                .stringType("basset")
+                .stringType("blood")
+                .stringType("english")
+                .stringType("ibizan")
+                .stringType("plott")
+                .stringType("walker"));
         object.stringType("status", "success");
     }
 
