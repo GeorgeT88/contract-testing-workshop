@@ -53,10 +53,7 @@ class DogProviderTest {
                 .willRespondWith()
                 .status(200)
                 .headers(Map.of("Content-Type", "application/json"))
-                .body(new PactDslJsonBody()
-                        .stringType("message", "success")
-                        .stringType("status", "success")
-                        .asBody())
+                .body(newJsonBody(DslBodyFactory::randomDogImageBody).build())
                 .toPact().asV4Pact().get();
     }
 
@@ -84,10 +81,10 @@ class DogProviderTest {
     void getRandomDogImage() {
         RandomDogImage expected = getRandomDogImageSample();
 
-        RandomDogImage breeds = dogService.getRandomDogImage();
+        RandomDogImage randomDogImage = dogService.getRandomDogImage();
 
-        assertFalse(breeds.toString().isEmpty());
-        assertEquals(expected.getMessage(), breeds.getMessage());
-        assertEquals(expected.getStatus(), breeds.getStatus());
+        assertEquals(2, randomDogImage.getClass().getDeclaredFields().length);
+        assertEquals(expected.getMessage(), randomDogImage.getMessage());
+        assertEquals(expected.getStatus(), randomDogImage.getStatus());
     }
 }
