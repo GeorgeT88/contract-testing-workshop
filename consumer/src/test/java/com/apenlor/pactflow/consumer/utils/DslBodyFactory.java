@@ -52,9 +52,7 @@ public class DslBodyFactory {
     }
 
     public static void breedsSampleBody(LambdaDslObject object) {
-        object.minArrayLike("message", 3, array -> {
-            array.stringType("breed");
-        });
+        object.eachLike("message", array -> array.stringType("afghan"));
         object.stringType("status", "success");
     }
 
