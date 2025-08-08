@@ -1,6 +1,7 @@
 package com.apenlor.pactflow.dog.controller;
 
 import com.apenlor.pactflow.dog.dto.BreedsResponse;
+import com.apenlor.pactflow.dog.dto.RandomDogImageResponse;
 import com.apenlor.pactflow.dog.service.DogCeoService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,5 +25,9 @@ public class DogController {
         return dogCeoService.getHoundSubBreeds();
     }
 
-
+    @GetMapping()
+    public RandomDogImageResponse getRandomDogImage() {
+        log.info("Random dog image requested");
+        return dogCeoService.getRandomDogImage();
+    }
 }
