@@ -1,8 +1,31 @@
 openapi: 3.1.0
 info:
-  title: Dog API
+  title: Dog Provider API
   version: 1.0.0
-paths: { }
+servers:
+  - url: http://localhost:8080
+paths:
+  /dogs/random:
+    get:
+      operationId: getRandomDog
+      responses:
+        '200':
+          description: Random dog image
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RandomDogImage'
+  /dogs/subbreeds:
+    get:
+      operationId: getHoundsSubBreeds
+      responses:
+        '200':
+          description: List of hound sub-breeds
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BreedsResponse'
+
 components:
   schemas:
     RandomDogImage:
@@ -13,4 +36,16 @@ components:
           type: string
         status:
           type: string
-      required: [ message, status ]
+      required: [message, status]
+
+    BreedsResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        message:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+      required: [message, status]
