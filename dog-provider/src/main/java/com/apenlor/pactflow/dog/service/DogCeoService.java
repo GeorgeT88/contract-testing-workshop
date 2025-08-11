@@ -1,7 +1,7 @@
 package com.apenlor.pactflow.dog.service;
 
 import com.apenlor.pactflow.dog.dto.BreedsResponse;
-import com.apenlor.pactflow.dog.dto.RandomDogImageResponse;
+import com.apenlor.pactflow.dog.dto.RandomDogImage;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -21,10 +21,10 @@ public class DogCeoService {
                 .bodyToMono(BreedsResponse.class).block();
     }
 
-    public RandomDogImageResponse getRandomDogImage() {
+    public RandomDogImage getRandomDogImage() {
         return webClient.get()
                 .uri("/breeds/image/random")
                 .retrieve()
-                .bodyToMono(RandomDogImageResponse.class).block();
+                .bodyToMono(RandomDogImage.class).block();
     }
 }
