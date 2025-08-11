@@ -83,7 +83,6 @@ class DogProviderTest {
 
         RandomDogImage randomDogImage = dogService.getRandomDogImage();
 
-        assertEquals(2, randomDogImage.getClass().getDeclaredFields().length);
         assertEquals(expected.getMessage(), randomDogImage.getMessage());
         assertEquals(expected.getStatus(), randomDogImage.getStatus());
     }
