@@ -53,7 +53,9 @@ class DogProviderTest {
                 .willRespondWith()
                 .status(200)
                 .headers(Map.of("Content-Type", "application/json"))
-                .body(newJsonBody(DslBodyFactory::randomDogImageBody).build())
+                .body(new PactDslJsonBody()
+                        .stringType("message", "https://example.com/dog.jpg")
+                        .stringType("status", "success")))
                 .toPact().asV4Pact().get();
     }
 
