@@ -1,6 +1,6 @@
 package com.apenlor.pactflow.dog.dto;
 
-public record RandomDogImage(String message, String status, String test) {
+public record RandomDogImage(String message) {
 };
 
 
