@@ -84,7 +84,7 @@ public class FixtureFactory {
 
     public static RandomDogImage getRandomDogImageSample() {
         return RandomDogImage.builder()
-                .message("success")
+                .message("https://example.com/dog.jpg")
                 .status("success")
                 .build();
     }
