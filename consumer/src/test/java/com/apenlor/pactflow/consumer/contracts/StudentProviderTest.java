@@ -36,7 +36,7 @@ class StudentProviderTest {
 
     public static final String NO_STUDENTS_EXIST = "no students exist";
     public static final String STUDENT_1_EXISTS = "student with ID 1 exists";
-    public static final String STUDENT_3_EXISTS = "student with ID 1 exists";
+    public static final String STUDENT_2_EXISTS = "student with ID 2 exists";
     public static final String MULTIPLE_STUDENTS_EXISTS = "multiple students exist";
 
     private StudentService studentService;
@@ -77,16 +77,16 @@ class StudentProviderTest {
     }
 
     @Pact(consumer = "consumer", provider = "student-provider")
-    public V4Pact getStudentWithId3(PactDslWithProvider builder) {
-        return builder.given(STUDENT_3_EXISTS)
-                .uponReceiving("get an existing student with ID 3 - updated")
-                .path("/students/3")
+    public V4Pact getStudentWithId2(PactDslWithProvider builder) {
+        return builder.given(STUDENT_2_EXISTS)
+                .uponReceiving("get an existing student with ID 2 - updated")
+                .path("/students/2")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
                 .headers(Map.of("Content-Type", "application/json"))
                 .body(newJsonBody(object -> {
-                    object.numberType("id", 3L);
+                    object.numberType("id", 2L);
                     studentSampleBody(object);
                 }).build())
                 .toPact().asV4Pact().get();
