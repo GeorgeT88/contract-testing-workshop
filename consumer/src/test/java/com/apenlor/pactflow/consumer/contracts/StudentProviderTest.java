@@ -24,8 +24,7 @@ import java.util.Map;
 
 import static au.com.dius.pact.consumer.dsl.LambdaDsl.newJsonArrayMinLike;
 import static au.com.dius.pact.consumer.dsl.LambdaDsl.newJsonBody;
-import static com.apenlor.pactflow.consumer.utils.Assertions.assertHttpClientError;
-import static com.apenlor.pactflow.consumer.utils.Assertions.assertStudentDetails;
+import static com.apenlor.pactflow.consumer.utils.Assertions.*;
 import static com.apenlor.pactflow.consumer.utils.DslBodyFactory.studentSampleBody;
 import static com.apenlor.pactflow.consumer.utils.FixtureFactory.getStudentSample;
 import static org.junit.jupiter.api.Assertions.*;
