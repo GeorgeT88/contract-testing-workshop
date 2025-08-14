@@ -36,7 +36,7 @@ public class Assertions {
 
     public static void assertStudentDetails(Student expected, Student actual) {
         assertNotNull(actual);
-        assertEquals(1L, actual.getId());
+        assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getBirth(), actual.getBirth());
         assertEquals(expected.getCredits(), actual.getCredits());

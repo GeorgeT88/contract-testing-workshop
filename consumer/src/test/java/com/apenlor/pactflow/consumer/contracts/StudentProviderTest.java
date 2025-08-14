@@ -228,6 +228,16 @@ class StudentProviderTest {
     }
 
     @Test
+    @PactTestFor(pactMethod = "getStudentWithId2")
+    void getStudentWhenStudentExist() {
+        Student expected = getStudentSample();
+
+        Student student = studentService.getStudent(2L);
+
+        assertStudentDetails(expected, student);
+    }
+
+    @Test
     @PactTestFor(pactMethod = "getNonExistingStudent")
     void getNonExistingStudent() {
         HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> studentService.getStudent(1L));
