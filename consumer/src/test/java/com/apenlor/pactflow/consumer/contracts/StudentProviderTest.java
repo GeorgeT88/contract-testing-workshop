@@ -229,7 +229,7 @@ class StudentProviderTest {
 
     @Test
     @PactTestFor(pactMethod = "getStudentWithId2")
-    void getStudentWhenStudentExist() {
+    void getStudentWhenStudentExist2() {
         Student expected = getStudentSample();
 
         Student student = studentService.getStudent(2L);
