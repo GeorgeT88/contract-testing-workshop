@@ -40,6 +40,7 @@ class StudentProviderVerificationTest {
     public static final String NO_STUDENTS_EXIST = "no students exist";
     public static final String STUDENT_1_EXISTS = "student with ID 1 exists";
     public static final String STUDENT_2_EXISTS = "student with ID 2 exists";
+    public static final String STUDENT_3_EXISTS = "student with ID 3 exists";
     public static final String MULTIPLE_STUDENTS_EXISTS = "multiple students exist";
     private static final Faker FAKER = new Faker();
 
@@ -73,15 +74,6 @@ class StudentProviderVerificationTest {
         doNothing().when(studentRepository).deleteById(anyLong());
         when(studentRepository.findById(1L)).thenReturn(Optional.of(one));
     }
-    
-    @State(STUDENT_2_EXISTS)
-    public void student2Exists() {
-        Student one = createFakeStudent(2L);
-        when(studentRepository.save(any(Student.class))).thenReturn(one);
-        doNothing().when(studentRepository).deleteById(anyLong());
-        when(studentRepository.findById(2L)).thenReturn(Optional.of(one));
-    }
-
 
     @State(MULTIPLE_STUDENTS_EXISTS)
     public void studentsExist() {
