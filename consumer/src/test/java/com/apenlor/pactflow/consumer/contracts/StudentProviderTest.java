@@ -234,7 +234,7 @@ class StudentProviderTest {
 
         Student student = studentService.getStudent(2L);
 
-        assertStudentDetails(expected, student);
+        assertStudentDetails2(expected, student);
     }
 
     @Test

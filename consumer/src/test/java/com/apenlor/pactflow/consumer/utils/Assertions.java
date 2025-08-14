@@ -45,6 +45,17 @@ public class Assertions {
         assertEquals(expected.getEnrolledCourses(), actual.getEnrolledCourses());
     }
 
+    public static void assertStudentDetails2(Student expected, Student actual) {
+        assertNotNull(actual);
+        assertEquals(2L, actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getBirth(), actual.getBirth());
+        assertEquals(expected.getCredits(), actual.getCredits());
+        assertEquals(expected.getEmail(), actual.getEmail());
+        assertEquals(expected.getAddress(), actual.getAddress());
+        assertEquals(expected.getEnrolledCourses(), actual.getEnrolledCourses());
+    }
+
     public static void assertHttpClientError(HttpClientErrorException exception, HttpStatus expectedStatus) {
         assertEquals(expectedStatus, exception.getStatusCode());
         ObjectMapper mapper = new ObjectMapper();
