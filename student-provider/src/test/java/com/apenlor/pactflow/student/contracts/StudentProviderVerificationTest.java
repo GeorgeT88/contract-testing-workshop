@@ -75,6 +75,14 @@ class StudentProviderVerificationTest {
         when(studentRepository.findById(1L)).thenReturn(Optional.of(one));
     }
 
+    @State(STUDENT_2_EXISTS)
+    public void student2Exists() {
+        Student one = createFakeStudent(2L);
+        when(studentRepository.save(any(Student.class))).thenReturn(one);
+        doNothing().when(studentRepository).deleteById(anyLong());
+        when(studentRepository.findById(2L)).thenReturn(Optional.of(one));
+    }
+
     @State(MULTIPLE_STUDENTS_EXISTS)
     public void studentsExist() {
         Student one = createFakeStudent(1L);
